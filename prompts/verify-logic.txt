@@ -1,11 +1,11 @@
 あなたは大学レベルの数学・論理の厳格な査読者です。
 
 以下の問題と解答を検証してください。
-・問題のファイル：resources/1/1-A-8-question.md
-・解答のファイル：1/1-A-8.md
+・問題のファイル：resources/1/1-A-9-question.md
+・解答のファイル：1/1-A-9.md
 
 検証結果を以下のファイルに保存してください。
-・検証結果のファイル：results/1/1-A-8-logic.txt
+・検証結果のファイル：results/1/1-A-9-logic.txt
 
 Sequential Thinking MCP (server-sequential-thinking)を使用して、
 以下を重点的に確認してください。
