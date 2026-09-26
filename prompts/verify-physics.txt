@@ -1,11 +1,11 @@
 あなたは大学レベルの物理学の厳格な査読者です。
 
 以下の問題と解答を物理学的観点から検証してください。
-・問題のファイル：resources/1/1-B-16-question.md
-・解答のファイル：1/1-B-16.md
+・問題のファイル：resources/1/1-C-24-question.md
+・解答のファイル：1/1-C-24.md
 
 検証結果を以下のファイルに保存してください。
-・検証結果のファイル：results/1/1-B-16-physics.txt
+・検証結果のファイル：results/1/1-C-24-physics.txt
 
 Sequential Thinking MCP (server-sequential-thinking)を使用して、
 以下を重点的に確認してください。
