@@ -46,18 +46,19 @@ AI を使って解いた解答です。
 解答編集時の注意点などを記載しています。
 VSCode はガバガバなので表示できますが、Github の Markdown + Tex は条件が厳しいです。
 
-- Markdown 中に記載する Tex のうち、中括弧を表現する
-  ```codeblock
+- Markdown 中に記載する Tex のうち、中括弧を表現する場合は、両方で正しく表示できるようにmathブロックで囲んでください。
+  （Github の Markdown パーサがエスケープシーケンスを勝手に削除してしまう問題）。
+```codeblock
   ・VSCode で表示できて、Github で表示できない。
   \left\{ ... \right\}
   ・Github で表示できて、VSCode で表示できない。
   \left\\{ ... \right\\}
+  ・mathブロックで囲えば両方で表示できる。(表示の都合上先頭に｜をつけてます)
+    | ```math
+    | \left\{ ...\right}
+    | ```
   ```
-  が、Github 上では正しく表示されません（Github の Markdown パーサがエスケープシーケンスを勝手に削除してしまう問題）。
-  GitHub 上で正しく表示できるようにエスケープシーケンスを重ねています。
-  逆に VSCode では表示できません。
-  VSCode で閲覧する場合は、エラーになる個所でこのエスケープを1個削除してください。
-
+  
 - Github では、Markdown や Tex の区切り部分に半角スペースがないと正しく表示されません。VSCode で修正・確認する場合は注意が必要です。
 
 - Github では、Markdown 中の Tex に `*` を書くと Markdown が先に解釈してしまい Tex が認識しないことがあります。そのときは、`{\ast}`を使用してください。
