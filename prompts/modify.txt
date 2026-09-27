@@ -1,10 +1,10 @@
 検証した結果、FAILの判定となりました。
 
-・問題： resources/1/1-A-12-question.md
-・解答例： resources/1/1-A-12-answer.md
-・解答（修正対象）： 1/1-A-12.md
-・検証結果（数学的）： results/1/1-A-12-logic.txt
-・検証結果（物理的）： results/1/1-A-12-physics.txt
+・問題： resources/8/8-A-5-question.md
+・解答例： resources/8/8-A-5-answer.md
+・解答（修正対象）： 8/8-A-5.md
+・検証結果（数学的）： results/8/8-A-5-logic.md
+・検証結果（物理的）： results/8/8-A-5-physics.md
 
 解答例は演習問題に添付されている模範解答（計算過程を省略している可能性あり）です。
 
