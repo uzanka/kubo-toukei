@@ -1,12 +1,13 @@
 検証した結果、FAILの判定となりました。
 
 ・問題： resources/1/1-A-12-question.md
-・解答： 1/1-A-12.md
 ・解答例： resources/1/1-A-12-answer.md
-・検証結果： results/1/1-A-12-logic.txt
-・検証結果： results/1/1-A-12-physics.txt
+・解答（修正対象）： 1/1-A-12.md
+・検証結果（数学的）： results/1/1-A-12-logic.txt
+・検証結果（物理的）： results/1/1-A-12-physics.txt
 
 解答例は演習問題に添付されている模範解答（計算過程を省略している可能性あり）です。
 
+Sequential Thinking MCP (server-sequential-thinking)を使用して、
 検証結果の指摘と解答例を確認し、解答を修正してください。
 
