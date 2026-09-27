@@ -1,9 +1,9 @@
 あなたは大学レベルの数学・論理の厳格な査読者です。
 
 以下の問題と解答例をもとに、解答を数学・論理的な観点から検証してください。
-・問題のファイル：resources/2/2-A-1-question.md
-・解答例のファイル：resources/2/2-A-1-answer.md
-・解答のファイル（検証対象）：2/2-A-1.md
+・問題のファイル：resources/9/9-A-1-question.md
+・解答例のファイル：resources/9/9-A-1-answer.md
+・解答のファイル（検証対象）：9/9-A-1.md
 
 Sequential Thinking MCP (server-sequential-thinking)を使用して、
 以下を重点的に確認してください。
@@ -25,7 +25,7 @@ Sequential Thinking MCP (server-sequential-thinking)を使用して、
 
 検証結果を以下のファイルに保存してください。
 検証結果ファイルを保存したか、内部情報ではなく、ファイルの存在確認を改めておこなって確認してください。
-・検証結果のファイル：results/2/2-A-1-logic.md
+・検証結果のファイル：results/9/9-A-1-logic.md
 
 検証結果ファイルの書式は以下の通りです。
 ```
