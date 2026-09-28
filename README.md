@@ -24,7 +24,7 @@ AI を使って解いた解答です。
 
 - LLM
   - LLMサーバ：[ollama](https://ollama.com/)
-  - CLI (frontend)：[claude CLI](https://claude.ai/) （ollama launch claude で起動）
+  - CLI (frontend)：[Claude Code CLI](https://claude.ai/) （ollama launch claude で起動）
   - MCP：[server-sequential-thinking MCP](https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking)
   - 使用モデル
     - [画像認識、テキスト化、解答作成プロンプト](prompts/prompt.txt)：[gemma4:26b](https://ollama.com/library/gemma4)
