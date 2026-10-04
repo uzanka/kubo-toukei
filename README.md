@@ -11,7 +11,7 @@ AI を使って解いた解答です。
 参考にする場合には十分に注意してください。
 - 誤記、誤答を見つけた場合は、issue、pull request を発行してください。
 
-## AI について
+## 作成環境
 
 以下の環境で解答作成と検証を行っています。
 
@@ -20,8 +20,8 @@ AI を使って解いた解答です。
   - CLI (frontend)：[Claude Code CLI](https://claude.ai/) （ollama launch claude で起動）
   - MCP：[server-sequential-thinking MCP](https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking)
   - 使用モデル
-    - [画像認識、テキスト化、解答作成プロンプト](prompts/prompt.txt)：[gemma4:26b](https://ollama.com/library/gemma4)
-    - 検証プロンプト（[数学的](prompts/verify-logic.txt)、[物理的](prompts/verify-physics.txt)）：[qwen3.6:27b](https://ollama.com/library/qwen3.6)
+    - [gemma4:26b](https://ollama.com/library/gemma4)：[画像認識、テキスト化、解答作成プロンプト](prompts/prompt.txt)で使用
+    - [qwen3.6:27b](https://ollama.com/library/qwen3.6)：検証プロンプト（[数学的](prompts/verify-logic.txt)、[物理的](prompts/verify-physics.txt)）、修正プロンプトで使用
 
 - PC
   - CPU：AMD Ryzen9800X3D
