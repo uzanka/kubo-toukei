@@ -23,7 +23,10 @@ AI を使って解いた解答です。
   - 使用モデル
     - [gemma4:26b](https://ollama.com/library/gemma4)：[画像認識、テキスト化、解答作成プロンプト](prompts/prompt.txt)で使用
     - [qwen3.6:27b](https://ollama.com/library/qwen3.6)：検証プロンプト（[数学的](prompts/verify-logic.txt)、[物理的](prompts/verify-physics.txt)）、修正プロンプトで使用
-  - その他：[Node.js](https://nodejs.org/ja)（MCP使うときに必要）
+  - その他
+    - [Node.js](https://nodejs.org/ja)（MCP使うときに必要）
+    - [Python](https://www.python.org/)
+      - matplotlib（図を描くときに必要）
 
 - PC
   - CPU：AMD Ryzen9800X3D
