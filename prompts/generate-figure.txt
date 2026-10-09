@@ -1,11 +1,11 @@
-resources/5/5-A-5-question.md は、図示せよという問題が含まれます。
+resources/6/6-A-11-question.md は、図示せよという問題が含まれます。
 この図を出力してください。
 また、図を参照できるように解答ファイルにリンクを作成してください。
 図は解答の一部であるため、解答の章に入れてください。
 図の作成には matplotlib を使用してください。
 図の作成に使用したスクリプトは results/figures/ フォルダに保存してください。
 
-問題ファイル：resources/5/5-A-5-question.md
-解答ファイル：5/5-A-5.md
-図の出力ファイル：5/5-A-5-figure-1.png
+問題ファイル：resources/6/6-A-11-question.md
+解答ファイル：6/6-A-11.md
+図の出力ファイル：6/6-A-11-figure-1.png
 
