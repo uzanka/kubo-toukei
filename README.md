@@ -5,7 +5,7 @@ AI を使って解いた解答です。
 
 - このページには解答のみを載せています。
 - 問題、解答例は原本を参照してください。
-- 取り消し線を引いてあるリンクは未検証の解答です。
+- 取り消し線を引いてあるリンクは未検証または検証に失敗している解答です。
 - 画像認識、解答、検証はすべてAIで行っています。
 そのため、正しい解答になっていない可能性があります。
 参考にする場合には十分に注意してください。
@@ -18,16 +18,17 @@ AI を使って解いた解答です。
 - LLM
   - LLMサーバ：[ollama](https://ollama.com/)
   - CLI (frontend)：[Claude Code CLI](https://claude.ai/) （ollama launch claude で起動）
-  - MCP：[server-sequential-thinking MCP](https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking)
+  - MCP：[sequential-thinking MCP](https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking)
   - 使用モデル
     - [gemma4:26b](https://ollama.com/library/gemma4)：[画像認識、テキスト化、解答作成プロンプト](prompts/prompt.txt)で使用
     - [qwen3.6:27b](https://ollama.com/library/qwen3.6)：検証プロンプト（[数学的](prompts/verify-logic.txt)、[物理的](prompts/verify-physics.txt)）、修正プロンプトで使用
+  - その他：[Node.js](https://nodejs.org/ja)（MCP使うときに必要）
 
 - PC
   - CPU：AMD Ryzen9800X3D
   - MEMORY：64GB
   - GPU：NVIDIA RTX5060Ti 16GB
-  - OS：Windows11
+  - OS：Windows 11
 
 ## その他
 
