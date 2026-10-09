@@ -1,10 +1,10 @@
 検証した結果、FAILの判定となりました。
 
-・問題： resources/1/1-R-8-question.md
-・解答例： resources/1/1-R-8-answer.md
-・解答（修正対象）： 1/1-R-8.md
-・検証結果（数学的）： results/1/1-R-8-logic.md
-・検証結果（物理的）： results/1/1-R-8-physics.md
+・問題： resources/3/3-R-3-question.md
+・解答例： resources/3/3-R-3-answer.md
+・解答（修正対象）： 3/3-R-3.md
+・検証結果（数学的）： results/3/3-R-3-logic.md
+・検証結果（物理的）： results/3/3-R-3-physics.md
 
 解答例は演習問題に添付されている模範解答（計算過程を省略している可能性あり）です。
 
