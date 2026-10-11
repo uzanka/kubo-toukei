@@ -22,8 +22,8 @@ AI を使って解いた解答です。
   - CLI (frontend)：[Claude Code CLI](https://claude.ai/) （ollama launch claude で起動）
   - MCP：[sequential-thinking MCP](https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking)
   - 使用モデル
-    - [gemma4:26b](https://ollama.com/library/gemma4)：[画像認識、テキスト化、解答作成プロンプト](prompts/prompt.txt)で使用
-    - [qwen3.6:27b](https://ollama.com/library/qwen3.6)：検証プロンプト（[数学的](prompts/verify-logic.txt)、[物理的](prompts/verify-physics.txt)）、修正プロンプトで使用
+    - [gemma4:26b](https://ollama.com/library/gemma4)：主に[画像認識、テキスト化、解答作成プロンプト](prompts/prompt.txt)で使用
+    - [qwen3.6:27b](https://ollama.com/library/qwen3.6)：主に検証プロンプト（[数学的](prompts/verify-logic.txt)、[物理的](prompts/verify-physics.txt)）、修正プロンプトで使用
   - その他
     - [Node.js](https://nodejs.org/ja)（MCP使うときに必要）
     - [Python](https://www.python.org/)
