@@ -1,9 +1,9 @@
 あなたは大学レベルの物理学の厳格な査読者です。
 
 以下の問題と解答例をもとに、解答を物理学的観点から検証してください。
-・問題のファイル：resources/3/3-A-19-question.md
-・解答例のファイル：resources/3/3-A-19-answer.md
-・解答のファイル（検証対象）：3/3-A-19.md
+・問題のファイル：resources/4/4-R-5-question.md
+・解答例のファイル：resources/4/4-R-5-answer.md
+・解答のファイル（検証対象）：4/4-R-5.md
 
 Sequential Thinking MCP (sequential-thinking)を使用して、
 以下を重点的に確認してください。
@@ -29,7 +29,7 @@ Sequential Thinking MCP (sequential-thinking)を使用して、
 
 検証結果を以下のファイルに保存してください。
 検証結果ファイルに誤りを記載する場合は、ファイルの何行目かのおおよその位置を記録してください。
-・検証結果のファイル：results/3/3-A-19-physics.md
+・検証結果のファイル：results/4/4-R-5-physics.md
 
 検証結果ファイルを保存したか、内部情報ではなく、ファイルの存在確認を改めておこなって確認してください。
 
