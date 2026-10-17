@@ -1,58 +1,115 @@
-import os, matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+#!/usr/bin/env python3
+"""Plot Joule-Thomson inversion curves for Dieterici and van der Waals gases.
+
+The axes use reduced (critical-point-normalized) variables:
+    t = T / T_c
+    p = P / P_c
+
+Run:
+    python jt_inversion_curves.py
+
+Dependencies:
+    numpy
+    matplotlib
+"""
+
+import argparse
+from pathlib import Path
+
 import numpy as np
+import matplotlib.pyplot as plt
 
-plt.rcParams['font.family'] = 'Meiryo'
-plt.rcParams['font.size'] = 11
 
-# Dieterici: p = (8-t)*exp(5/2 - 4/t)
-t_d = np.linspace(0.3, 7.99, 600)
-p_d = (8 - t_d) * np.exp(2.5 - 4.0 / t_d)
+def dieterici_pressure(t: np.ndarray) -> np.ndarray:
+    """Reduced inversion pressure for the Dieterici gas.
 
-# van der Waals: p = -27 + 24*sqrt(3t) - 12t
-t_v = np.linspace(0, 2.25, 600)
-p_v = -27 + 24 * np.sqrt(3 * t_v) - 12 * t_v
+    p = (8 - t) * exp(5/2 - 4/t), valid for 0 < t < 8.
+    """
+    return (8.0 - t) * np.exp(2.5 - 4.0 / t)
 
-fig, ax = plt.subplots(figsize=(8, 6))
 
-ax.plot(t_d, p_d, 'b-', linewidth=2.5, label='Dieterici', zorder=3)
-ax.plot(t_v, p_v, 'r--', linewidth=2.5, label='van der Waals', zorder=3)
+def van_der_waals_pressure(t: np.ndarray) -> np.ndarray:
+    """Reduced inversion pressure for the van der Waals gas.
 
-# Critical point
-ax.plot(1, 1, 'ko', markersize=8, label=r'Critical $(p_c, v_c, t_c)$', zorder=4)
+    p = 24*sqrt(3*t) - 12*t - 27.
+    The physical positive-pressure branch is 3/4 <= t <= 27/4.
+    """
+    return 24.0 * np.sqrt(3.0 * t) - 12.0 * t - 27.0
 
-# Grid lines at critical values
-ax.axhline(y=0, color='gray', linestyle=':', alpha=0.5, zorder=1)
-ax.axvline(x=1, color='gray', linestyle=':', alpha=0.3, zorder=1)
-ax.axhline(y=1, color='gray', linestyle=':', alpha=0.3, zorder=1)
 
-# Max points
-idx_max = np.argmax(p_d)
-t_max_d, p_max_d = t_d[idx_max], p_d[idx_max]
-ax.plot(t_max_d, p_max_d, 'bo', markersize=6, zorder=4)
-ax.annotate(f'Max: ({t_max_d:.2f}, {p_max_d:.1f})',
-           xy=(t_max_d, p_max_d), xytext=(t_max_d+0.5, p_max_d-3),
-           fontsize=9, color='blue', arrowprops=dict(arrowstyle='->', color='blue'))
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--show", action="store_true",
+        help="also display the plot in an interactive window",
+    )
+    args = parser.parse_args()
 
-idx_max_v = np.argmax(p_v)
-t_max_v, p_max_v = t_v[idx_max_v], p_v[idx_max_v]
-ax.plot(t_max_v, p_max_v, 'rs', markersize=6, zorder=4)
-ax.annotate(f'Max: ({t_max_v:.3f}, {p_max_v:.1f})',
-           xy=(t_max_v, p_max_v), xytext=(t_max_v+0.2, p_max_v-5),
-           fontsize=9, color='red', arrowprops=dict(arrowstyle='->', color='red'))
+    # Dieterici branch: p >= 0 for 0 < t < 8.
+    t_dieterici = np.linspace(0.01, 8.0, 2000, endpoint=False)
+    p_dieterici = dieterici_pressure(t_dieterici)
 
-ax.set_xlabel(r'Reduced temperature $t = T/T_c$', fontsize=13)
-ax.set_ylabel(r'Reduced pressure $p = P/P_c$', fontsize=13)
-ax.set_title('Joule-Thomson Inversion Curves\n久保統計 2-C-44', fontsize=14, pad=10)
-ax.legend(loc='upper right', fontsize=11, framealpha=0.9)
-ax.grid(True, alpha=0.3, zorder=2)
-ax.set_xlim(-0.1, 8.5)
-ymax = max(np.max(p_d), np.max(p_v)) + 3
-ax.set_ylim(-2, ymax)
+    # van der Waals branch: p >= 0 for 3/4 <= t <= 27/4.
+    t_vdw = np.linspace(0.75, 6.75, 1200)
+    p_vdw = van_der_waals_pressure(t_vdw)
 
-plt.tight_layout()
-out = '../../2/2-C-44-figure-1.png'
-plt.savefig(out, dpi=150, bbox_inches='tight')
-plt.close()
-print(f'Done: {out} ({os.path.getsize(out)} bytes)')
+    fig, ax = plt.subplots(figsize=(8.2, 5.4), constrained_layout=True)
+
+    ax.plot(
+        t_dieterici,
+        p_dieterici,
+        linewidth=2.2,
+        label=r"Dieterici: $p=(8-t)e^{5/2-4/t}$",
+    )
+    ax.plot(
+        t_vdw,
+        p_vdw,
+        linewidth=2.2,
+        label=r"van der Waals: $p=24\sqrt{3t}-12t-27$",
+    )
+
+    # Mark each curve's maximum, derived from the analytic expressions.
+    t_d_max = 4.0
+    p_d_max = 4.0 * np.exp(1.5)
+    t_vdw_max = 3.0
+    p_vdw_max = 9.0
+    ax.plot(t_d_max, p_d_max, marker="o", linestyle="none")
+    ax.annotate(
+        rf"max $({t_d_max:g},\ {p_d_max:.2f})$",
+        (t_d_max, p_d_max),
+        xytext=(10, -20),
+        textcoords="offset points",
+        fontsize=9,
+    )
+    ax.plot(t_vdw_max, p_vdw_max, marker="o", linestyle="none")
+    ax.annotate(
+        rf"max $({t_vdw_max:g},\ {p_vdw_max:g})$",
+        (t_vdw_max, p_vdw_max),
+        xytext=(10, 8),
+        textcoords="offset points",
+        fontsize=9,
+    )
+
+    ax.set_xlabel(r"Reduced temperature $t=T/T_c$", fontsize=12)
+    ax.set_ylabel(r"Reduced pressure $p=P/P_c$", fontsize=12)
+    ax.set_title("Joule-Thomson inversion curves", fontsize=13)
+    ax.set_xlim(0.0, 8.0)
+    ax.set_ylim(0.0, 20.0)
+    ax.set_xticks(np.arange(0.0, 8.1, 1.0))
+    ax.set_yticks(np.arange(0.0, 20.1, 2.0))
+    ax.grid(True, alpha=0.3)
+    ax.legend(loc="upper right", frameon=True, fontsize=9)
+
+    # Save the figure in the same directory as this script.
+    output_path = Path(__file__).resolve().with_name("jt_inversion_curves.png")
+    fig.savefig(output_path, dpi=200, bbox_inches="tight")
+    print(f"Saved figure to: {output_path}")
+
+    if args.show:
+        plt.show()
+    else:
+        plt.close(fig)
+
+
+if __name__ == "__main__":
+    main()
