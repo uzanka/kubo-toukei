@@ -1,73 +1,62 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""演習問題4-B-36: 比熱差と比熱の模式図を描く。
+日本語フォントが環境に存在しない場合は、OSに日本語フォントをインストールしてください。
 """
-演習問題 4-B-36 の解答用図 1: Hc-T 相図の作成
-
-問題文に示される限界磁場 H_c(T) と温度 T の関係を描画する。
-- 横軸: 温度 T (規格化値 T/T_0)
-- 縦軸: 限界磁場 H_c (規格化値 H_c/H_0)
-- H_c(T) = H_0 {1 - (T/T_0)^2} に従う曲線を描く
-- 超伝導状態 (s) と正常状態 (n) の領域を区別して塗り分ける
-"""
-
 import numpy as np
-import matplotlib
-matplotlib.rcParams['font.family'] = 'BIZ UDPGothic'
-matplotlib.rcParams['font.size'] = 14
-matplotlib.rcParams['axes.linewidth'] = 1.2
-matplotlib.rcParams['xtick.direction'] = 'in'
-matplotlib.rcParams['ytick.direction'] = 'in'
-matplotlib.rcParams['axes.axisbelow'] = True
-
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
+import matplotlib.font_manager as fm
 
-# T/T_0 の範囲を定義 (0 から 1.15 まで)
-T_norm = np.linspace(0, 1.15, 500)
+# 日本語フォントを自動選択（OSごとの代表的なフォント名を順に確認）
+FONT_CANDIDATES = [
+    "Noto Sans CJK JP", "Noto Sans JP", "IPAexGothic", "IPAGothic",
+    "Yu Gothic", "Meiryo", "Hiragino Sans", "TakaoGothic",
+    "MS Gothic", "DejaVu Sans"
+]
+available_fonts = {f.name for f in fm.fontManager.ttflist}
+for font_name in FONT_CANDIDATES:
+    if font_name in available_fonts:
+        plt.rcParams["font.family"] = font_name
+        break
+plt.rcParams["axes.unicode_minus"] = False
 
-# H_c/H_0 = 1 - (T/T_0)^2 (ただし H_c >= 0)
-H_norm = np.where(T_norm <= 1.0, 1.0 - T_norm**2, 0.0)
+# 設定値（無次元形状を見るための規格化例）
+T0 = 1.0
+gamma = 1.0
+Vbar = 1.0
+H0 = 1.0
+dpi = 200
 
-fig, ax = plt.subplots(figsize=(8, 6))
+t = np.linspace(0.0, 1.0, 1000)  # t = T/T0
+T = t * T0
 
-# 超伝導状態の領域を薄い色で塗りつぶす
-ax.fill_between(T_norm, 0, H_norm, where=(T_norm <= 1.0), alpha=0.3, color='skyblue', label='s (超伝導状態)')
+# 解答(iii): C_n - C_s
+delta_C = (Vbar * T * H0**2 / (2.0 * np.pi * T0**2)) * (1.0 - 3.0*t**2)
+t_zero = 1.0 / np.sqrt(3.0)
+t_max = 1.0 / 3.0
 
-# 正常状態の領域を別の色で塗りつぶす
-ax.fill_between(T_norm, 0, H_norm * 2, where=(T_norm > 1.0), alpha=0.3, color='lightcoral', label='n (正常状態)')
-
-# 境界線を描画
-ax.plot(T_norm[H_norm > 0], H_norm[H_norm > 0], 'b-', linewidth=2.5, label='$H_c(T)$')
-
-# 重要な点をマーク
-ax.plot(0, 1, 'ko', markersize=8)
-ax.text(-0.03, 1.02, r'$(0,\;H_0)$', ha='right', va='bottom', fontsize=12)
-
-ax.plot(1, 0, 'ko', markersize=8)
-ax.text(1.03, -0.05, r'$(T_0,\;0)$', ha='left', va='top', fontsize=12)
-
-# T_0 に垂直点線
-ax.axvline(x=1, linestyle='--', color='gray', alpha=0.7)
-
-# 軸ラベルとタイトル
-ax.set_xlabel(r'温度 $T / T_0$', fontsize=16)
-ax.set_ylabel(r'限界磁場 $H_c / H_0$', fontsize=16)
-
-# 軸の範囲設定
-ax.set_xlim(-0.05, 1.15)
-ax.set_ylim(-0.08, 1.15)
-
-# グリッドと凡例
+# 図1：解答式から直接求まる比熱差
+fig, ax = plt.subplots(figsize=(8, 5.5))
+ax.plot(t, delta_C, linewidth=2.5,
+        label=r"$C_n-C_s=\frac{\bar V T H_0^2}{2\pi T_0^2}"
+              r"\left[1-3(T/T_0)^2\right]$")
+ax.axhline(0, color="black", linewidth=1)
+ax.axvline(t_zero, color="gray", linestyle="--", linewidth=1.2,
+           label=r"$T/T_0=1/\sqrt{3}$")
+ax.scatter([t_max], [np.interp(t_max, t, delta_C)], zorder=4)
+ax.annotate(r"極大点 $T/T_0=1/3$",
+            xy=(t_max, np.interp(t_max, t, delta_C)),
+            xytext=(0.38, np.max(delta_C)*0.78),
+            arrowprops=dict(arrowstyle="->"))
+ax.scatter([t_zero], [0], zorder=4)
+ax.set_xlabel(r"温度 $T/T_0$")
+ax.set_ylabel(r"比熱差 $C_n-C_s$")
+ax.set_title(r"比熱差 $C_n-C_s$ の温度依存性")
+ax.set_xlim(0, 1)
 ax.grid(True, alpha=0.3)
-ax.legend(loc='upper right', fontsize=12)
+ax.legend(fontsize=8)
+fig.tight_layout()
+fig.savefig("heat_capacity_difference.png", dpi=dpi)
 
-# T/T_0 = 1 の位置にラベルを配置
-ax.axvline(x=1, linestyle='--', color='gray', alpha=0.5)
-ax.text(1, -0.06, r'$T_0$', ha='center', va='top', fontsize=12, style='italic')
-
-# T/T_0 = 0 に縦線
-ax.axhline(y=0, color='k', linewidth=1)
-ax.axvline(x=0, color='k', linewidth=1)
-
-plt.tight_layout()
-plt.savefig('../../4/4-B-36-figure-1.png', dpi=150, bbox_inches='tight')
-plt.close()
-print("Figure 1 saved: 4-B-36-figure-1.png")
+print("保存しました: 4-B-36-figure-1.png")
+plt.show()
