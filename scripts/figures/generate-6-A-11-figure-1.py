@@ -1,91 +1,205 @@
-"""
-演習問題 6-A-11 の解答図: Helmholtz自由エネルギー F を N_g の関数として図示する.
+#!/usr/bin/env python3
+"""Plot Helmholtz free energy versus gas-phase particle number.
 
-F_g(N_g) = -kT * N_g * (log(z_g) - log(N_g) + 1)  : 気相の自由エネルギー
-F_s(N_g) = -kT * (N - N_g) * log(z_s)              : 固相の自由エネルギー
-F(N_g)   = F_g(N_g) + F_s(N_g)                     : 全系の自由エネルギー
+The curves illustrate the equilibrium condition for a solid in equilibrium
+with its ideal-gas vapor.  The plotted free energies are scaled by kT:
+
+    F_g/(kT) = N_g [ln(N_g / z_g) - 1]
+    F_s/(kT) = -(N - N_g) ln(z_s)
+    F/(kT)   = F_g/(kT) + F_s/(kT)
+
+The model predicts the unconstrained stationary point N_g* = z_g / z_s.
+If N >= N_g*, the minimum is at this interior point; if N < N_g*, the
+minimum over 0 <= N_g <= N lies at the boundary N_g = N (all atoms in gas).
+
+Dependencies: numpy, matplotlib
+
+Run:
+    python free_energy_phase_equilibrium.py
+or customize the illustrative parameters:
+    python free_energy_phase_equilibrium.py --n-star 40 --z-s 3 \
+        --n-high 100 --n-low 20 --output free_energy.png
 """
 
-import numpy as np
-import matplotlib as mpl
-mpl.use('Agg')
+import argparse
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import font_manager
 
-# ---- パラメータ（適当な単位で設定） ---
-kT = 1.0       # kT = 1 (適当な単位)
-z_g = 100.0    # 気体分子の分配関数
-z_s = 10.0     # 固体の単一サイト分配関数
-N = 30         # 総原子数
 
-# N_g の範囲: 0 < N_g <= N
-N_g = np.linspace(0.1, N, 500)
+def set_font_for_japanese() -> bool:
+    """Use an installed Japanese font when available; return success flag."""
+    preferred = [
+        "Noto Sans CJK JP",
+        "Noto Serif CJK JP",
+        "IPAexGothic",
+        "IPAGothic",
+        "Yu Gothic",
+        "Meiryo",
+        "Hiragino Sans",
+    ]
+    installed = {font.name for font in font_manager.fontManager.ttflist}
+    for name in preferred:
+        if name in installed:
+            plt.rcParams["font.family"] = name
+            break
+    else:
+        return False
+    plt.rcParams["axes.unicode_minus"] = False
+    return True
 
-# F_g(N_g) = -kT * N_g * (log(z_g) - log(N_g) + 1)
-F_g = -kT * N_g * (np.log(z_g) - np.log(N_g) + 1)
 
-# F_s(N_g) = -kT * (N - N_g) * log(z_s)
-F_s = -kT * (N - N_g) * np.log(z_s)
+def free_energy_curves(ng: np.ndarray, n_total: float, z_g: float, z_s: float):
+    """Return F_g/(kT), F_s/(kT), and total F/(kT) at each N_g."""
+    # The limit N_g * ln(N_g / z_g) -> 0 as N_g -> 0 is used at N_g = 0.
+    f_g = np.zeros_like(ng, dtype=float)
+    positive = ng > 0
+    f_g[positive] = ng[positive] * (np.log(ng[positive] / z_g) - 1.0)
+    f_s = -(n_total - ng) * np.log(z_s)
+    return f_g, f_s, f_g + f_s
 
-# F(N_g) = F_g + F_s
-F = F_g + F_s
 
-# 平衡点: N_g = z_g / z_s
-N_g_eq = z_g / z_s
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Plot free-energy curves for solid-vapor equilibrium."
+    )
+    parser.add_argument(
+        "--n-star", type=float, default=40.0,
+        help="equilibrium gas population N_g* = z_g/z_s (default: 40)",
+    )
+    parser.add_argument(
+        "--z-s", type=float, default=3.0,
+        help="single-atom solid partition function z_s (default: 3)",
+    )
+    parser.add_argument(
+        "--n-high", type=float, default=100.0,
+        help="total atom count for the coexistence case (must exceed N_g*)",
+    )
+    parser.add_argument(
+        "--n-low", type=float, default=20.0,
+        help="total atom count for the all-gas case (must be below N_g*)",
+    )
+    parser.add_argument(
+        "--output", type=Path, default=Path("free_energy_phase_equilibrium.png"),
+        help="output image filename (default: free_energy_phase_equilibrium.png)",
+    )
+    parser.add_argument(
+        "--show", action="store_true",
+        help="open the figure window after saving (useful in an interactive desktop session)",
+    )
+    args = parser.parse_args()
 
-# ---- 描画 ---
-FONT_SIZE = 14
-LINE_WIDTH = 2.5
-TICK_LABEL_SIZE = 12
-LEGEND_FONT = 11
+    if args.n_star <= 0 or args.z_s <= 0:
+        parser.error("--n-star and --z-s must be positive.")
+    if not (args.n_high > args.n_star):
+        parser.error("--n-high must be greater than --n-star.")
+    if not (0 < args.n_low < args.n_star):
+        parser.error("--n-low must be positive and less than --n-star.")
 
-fig, ax = plt.subplots(figsize=(9, 6))
-fig.patch.set_facecolor('white')
-ax.set_facecolor('#fafafa')
+    n_star = args.n_star
+    z_s = args.z_s
+    # Choose z_g so that the stationary point is exactly z_g/z_s = N_g*.
+    z_g = n_star * z_s
 
-# F_g: 気相の自由エネルギー
-ax.plot(N_g, F_g, color='#2196F3', lw=LINE_WIDTH, label=r'$F_g$ (gas)')
+    japanese = set_font_for_japanese()
+    if japanese:
+        title = "固相・気相平衡における自由エネルギー"
+        x_label = "気相の原子数 $N_g$"
+        y_label = "自由エネルギー $F/(kT)$"
+        component_title = "自由エネルギーの各成分"
+        total_title = "全自由エネルギー $F=F_g+F_s$"
+        labels = ("気相 $F_g/(kT)$", "固相 $F_s/(kT)$", "全自由エネルギー")
+        high_note = f"内部極小点  $N_g^*={n_star:g}$\n固相・気相が共存"
+        low_note = f"最小点は境界  $N_g=N={args.n_low:g}$\n全原子が気相に存在"
+        threshold_note = f"閾値 $N_g^*=z_g/z_s={n_star:g}$"
+        row_high = f"全原子数 $N={args.n_high:g}>N_g^*$"
+        row_low = f"全原子数 $N={args.n_low:g}<N_g^*$"
+    else:
+        title = "Helmholtz Free Energy for Solid-Vapor Equilibrium"
+        x_label = "Gas-phase atom count $N_g$"
+        y_label = "Dimensionless free energy $F/(kT)$"
+        component_title = "Free-energy components"
+        total_title = "Total free energy $F=F_g+F_s$"
+        labels = ("Gas phase $F_g/(kT)$", "Solid phase $F_s/(kT)$", "Total free energy")
+        high_note = f"Interior minimum: $N_g^*={n_star:g}$\nSolid and vapor coexist"
+        low_note = f"Minimum at boundary: $N_g=N={args.n_low:g}$\nAll atoms are in the gas"
+        threshold_note = f"Threshold $N_g^*=z_g/z_s={n_star:g}$"
+        row_high = f"Total atoms $N={args.n_high:g}>N_g^*$"
+        row_low = f"Total atoms $N={args.n_low:g}<N_g^*$"
 
-# F_s: 固相の自由エネルギー
-ax.plot(N_g, F_s, color='#FF9800', lw=LINE_WIDTH, ls='--', label=r'$F_s$ (solid)')
+    fig, axes = plt.subplots(2, 2, figsize=(13.5, 9.0), constrained_layout=True)
+    fig.suptitle(title, fontsize=16)
 
-# F: 全系の自由エネルギー
-ax.plot(N_g, F, color='#4CAF50', lw=LINE_WIDTH, label=r'$F=F_g+F_s$')
+    scenarios = [
+        (args.n_high, row_high, high_note, True),
+        (args.n_low, row_low, low_note, False),
+    ]
 
-# 極小点を示す垂直破線
-ax.axvline(x=N_g_eq, color='#E91E63', ls='-.', lw=1.5, alpha=0.8)
+    for row, (n_total, row_title, note, has_interior_minimum) in enumerate(scenarios):
+        ng = np.linspace(0.0, n_total, 800)
+        f_g, f_s, f_total = free_energy_curves(ng, n_total, z_g, z_s)
+        ax_components = axes[row, 0]
+        ax_total = axes[row, 1]
 
-# 極小点にマーカー
-F_eq_idx = np.argmin(np.abs(N_g - N_g_eq))
-F_eq_val = F[F_eq_idx]
-ax.plot(N_g[F_eq_idx], F_eq_val, 'D', color='#E91E63', markersize=10, alpha=0.8)
+        # Component diagram: the total free energy is the sum of these curves.
+        ax_components.plot(ng, f_g, linestyle="--", linewidth=2, label=labels[0])
+        ax_components.plot(ng, f_s, linestyle="-.", linewidth=2, label=labels[1])
+        ax_components.set_title(f"{row_title}\n{component_title}")
+        ax_components.set_xlabel(x_label)
+        ax_components.set_ylabel(y_label)
+        ax_components.set_xlim(0, n_total)
+        ax_components.grid(True, alpha=0.25)
+        ax_components.legend(loc="best")
 
-# ---- 軸ラベル・タイトル ---
-ax.set_xlabel(r'$N_g$', fontsize=FONT_SIZE)
-ax.set_ylabel(r'$F/kT$', fontsize=FONT_SIZE)
-ax.set_title('Fig.6-A-11: Helmholtz free energy vs. gas atom number', fontsize=14, fontweight='bold')
+        # Total free energy and its constrained minimum.
+        ax_total.plot(ng, f_total, linewidth=2.5, label=labels[2])
+        ax_total.set_title(f"{row_title}\n{total_title}")
+        ax_total.set_xlabel(x_label)
+        ax_total.set_ylabel(y_label)
+        ax_total.set_xlim(0, n_total)
+        ax_total.grid(True, alpha=0.25)
 
-# ---- 凡例 ---
-ax.legend(loc='upper right', fontsize=LEGEND_FONT, frameon=True, facecolor='white')
+        if has_interior_minimum:
+            ng_eq = n_star
+            f_eq = free_energy_curves(np.array([ng_eq]), n_total, z_g, z_s)[2][0]
+            ax_components.axvline(ng_eq, linestyle=":", linewidth=1.5)
+            ax_total.axvline(ng_eq, linestyle=":", linewidth=1.5)
+            ax_total.scatter([ng_eq], [f_eq], zorder=5)
+            ax_total.annotate(
+                note,
+                xy=(ng_eq, f_eq),
+                xytext=(14, 25),
+                textcoords="offset points",
+                arrowprops={"arrowstyle": "->"},
+            )
+        else:
+            ng_eq = n_total
+            f_eq = f_total[-1]
+            ax_total.scatter([ng_eq], [f_eq], zorder=5)
+            ax_total.annotate(
+                note,
+                xy=(ng_eq, f_eq),
+                xytext=(-155, 30),
+                textcoords="offset points",
+                arrowprops={"arrowstyle": "->"},
+            )
 
-# ---- グリッド ---
-ax.grid(True, alpha=0.3)
+        ax_total.text(
+            0.03, 0.04, threshold_note,
+            transform=ax_total.transAxes,
+            va="bottom",
+            bbox={"boxstyle": "round,pad=0.3", "alpha": 0.12},
+        )
 
-# ---- 注釈 ---
-ax.annotate(r'equilibrium: $N_g=z_g/z_s$',
-            xy=(N_g_eq, F_eq_val),
-            xytext=(N_g_eq + 4, F_eq_val + 5),
-            fontsize=TICK_LABEL_SIZE,
-            color='#E91E63',
-            arrowprops=dict(arrowstyle='->', color='#E91E63', lw=1.2),
-            bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8, edgecolor='#E91E63'))
+    fig.savefig(args.output, dpi=200, bbox_inches="tight")
+    print(f"Saved figure: {args.output.resolve()}")
+    if args.show:
+        plt.show()
+    else:
+        plt.close(fig)
 
-# 軸の設定
-ax.set_xlim(0, N + 1)
-ax.tick_params(labelsize=TICK_LABEL_SIZE)
 
-# ---- 保存 ---
-save_path = '../../6/6-A-11-figure-1.png'
-fig.savefig(save_path, dpi=150, bbox_inches='tight', facecolor='white')
-plt.close(fig)
-
-print(f"Figure saved to {save_path}")
+if __name__ == "__main__":
+    main()
