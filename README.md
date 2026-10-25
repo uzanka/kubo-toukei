@@ -1,4 +1,7 @@
-# [久保統計の完全解答](https://github.com/uzanka/kubo-toukei/wiki)
+# 久保統計の完全解答
+
+[Wiki ページ](https://github.com/uzanka/kubo-toukei/wiki)
+
 
 ## 作成環境
 
