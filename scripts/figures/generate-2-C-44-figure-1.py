@@ -101,7 +101,7 @@ def main() -> None:
     ax.legend(loc="upper right", frameon=True, fontsize=9)
 
     # Save the figure in the same directory as this script.
-    output_path = Path(__file__).resolve().with_name("jt_inversion_curves.png")
+    output_path = Path(__file__).resolve().with_name("2-C-44-figure-1.png")
     fig.savefig(output_path, dpi=200, bbox_inches="tight")
     print(f"Saved figure to: {output_path}")
 

@@ -53,7 +53,7 @@ ax.set_xlim(0, 1)
 ax.grid(True, alpha=0.3)
 ax.legend(fontsize=8)
 fig.tight_layout()
-fig.savefig("heat_capacities_schematic.png", dpi=dpi)
+fig.savefig("4-B-36-figure-2.png", dpi=dpi)
 
 print("保存しました: 4-B-36-figure-2.png")
 plt.show()

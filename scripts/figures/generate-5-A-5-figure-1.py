@@ -63,7 +63,7 @@ ax.legend(loc='upper right', fontsize=11)
 
 # 図を保存
 fig.tight_layout()
-fig.savefig('../../5/5-A-5-figure-1.png', dpi=150, bbox_inches='tight')
+fig.savefig('5-A-5-figure-1.png', dpi=150, bbox_inches='tight')
 plt.close(fig)
 
-print("Figure saved to 5/5-A-5-figure-1.png")
+print("Figure saved to 5-A-5-figure-1.png")

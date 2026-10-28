@@ -39,7 +39,7 @@ plt.legend()
 plt.tight_layout()
 
 # Save the figure in the current directory
-plt.savefig("rubber_joule_effect.png", dpi=200)
+plt.savefig("3-C-34-figure-1.png", dpi=200)
 plt.show()
 
 print(f"Zero-crossing stretch ratio: L_crit = {L_crit:.6f}")

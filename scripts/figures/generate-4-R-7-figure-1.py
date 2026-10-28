@@ -133,7 +133,7 @@ ax.set_ylim(0, Tc * 1.08)
 ax.grid(True, alpha=0.3)
 ax.legend(fontsize=8)
 fig.tight_layout()
-fig.savefig("phase_diagram.png", dpi=save_dpi)
+fig.savefig("4-R-7-figure-1.png", dpi=save_dpi)
 
 print("Saved figures: vapor_pressure.png, mixing_gibbs_energy.png, phase_diagram.png")
 print(f"Critical temperature Tc = {Tc:g} K")

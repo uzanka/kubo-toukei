@@ -82,8 +82,8 @@ def main() -> None:
         help="total atom count for the all-gas case (must be below N_g*)",
     )
     parser.add_argument(
-        "--output", type=Path, default=Path("free_energy_phase_equilibrium.png"),
-        help="output image filename (default: free_energy_phase_equilibrium.png)",
+        "--output", type=Path, default=Path("6-A-11-figure-1.png"),
+        help="output image filename (default: 6-A-11-figure-1.png)",
     )
     parser.add_argument(
         "--show", action="store_true",
