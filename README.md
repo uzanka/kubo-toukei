@@ -18,7 +18,10 @@
     - [Node.js](https://nodejs.org/ja)（MCP使うときに必要）
     - [Python](https://www.python.org/)
       - matplotlib（図を描くときに必要）
-    - ChatGPT：検証→修正のループが終わらない解答の修正で使用
+    - ChatGPT(+思考)：ローカルLLMの解答の査読に使用、ローカルLLMで検証→修正のループが終わらない解答の修正や検証で使用
+    - Claude(Sonnet5.5中)：ローカルLLMの解答の査読に使用
+    - Gemini(自動モード+強化版)：ローカルLLMの解答の査読に使用
+    - Microsoft Copilot(+Think Deeper)：ローカルLLMの解答の査読に使用
 
 - PC
   - CPU：AMD Ryzen9800X3D
